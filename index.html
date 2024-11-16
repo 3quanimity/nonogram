@@ -80,15 +80,63 @@
 
             mouseDown: function(event) {
                 this.isMouseDown = true
+                this.colorize(event)
             },
 
             mouseUp: function(event) {
                 this.isMouseDown = false
             },
 
-            resetGridAndIndicex: function () {
+            resetGrid: function () {
+		        this.mouseUp()
+		        // 1
+		        var nbCases = this.casesColored.length
+		        for (i = 0; i < nbCases; i++) {
+		          if(this.casesColored[i] && this.casesColored[i].classList)
+		            this.casesColored[i].classList.remove("blackBg")
+		        } 
+		        this.casesColored = []
+		        // 2
+		        nbCases = this.casesColoredLoaded.length
+		        for (i = 0; i < nbCases; i++) {
+		          if(this.casesColoredLoaded[i] && this.casesColoredLoaded[i].classList)
+		            this.casesColoredLoaded[i].classList.remove("blackBg")
+		        } 
+		        this.casesColoredLoaded = []
+	      	},
 
-            },
+	    	resetIndices: function () {
+	    		// Clean des indices
+		        // Top
+		        for (i = 0; i < this.casesIndicesT.length; i++) {
+		          this.casesIndicesT[i].innerHTML = ""
+		        }
+		        // Left
+		        for (i = 0; i < this.casesIndicesL.length; i++) {
+		          this.casesIndicesL[i].innerHTML = ""
+		        }
+      		},
+
+      		removeCanvas: function () {
+		        var elementsToClean = document.getElementsByTagName("canvas"), index;
+		        // Suppression des canvas (images)
+		        for (index = elementsToClean.length - 1; index >= 0; index--) {
+		          if(elementsToClean[index].id != "previewCanvas") {
+		            elementsToClean[index].parentNode.removeChild(elementsToClean[index]);
+		          }
+		        }
+
+		        var canvas = document.getElementById("previewCanvas");
+		        const context = canvas.getContext('2d');
+		        context.clearRect(0, 0, canvas.width, canvas.height);
+
+		    },
+            
+      		resetGridAndIndicex: function () {
+	    		this.resetGrid()
+        		this.resetIndices()
+        		this.removeCanvas()
+      		},
 
             validGrid: function () {
 
