@@ -131,16 +131,112 @@
 		        context.clearRect(0, 0, canvas.width, canvas.height);
 
 		    },
-            
+
       		resetGridAndIndicex: function () {
 	    		this.resetGrid()
         		this.resetIndices()
         		this.removeCanvas()
       		},
 
-            validGrid: function () {
+		    validGrid: function () {
+		        this.mouseUp()
+		        this.removeCanvas()
+		        this.resetIndices()
+		        
+                // Création d'un tableau par lignes
+		        for(var ligne=1 ; ligne<26; ligne++) {
+		          var ligneArray = []
+		          var colArray = []
+		          var cpt1 = 0
 
-            },
+		          for(var col=1 ; col<26; col++) {
+		            var laCase = document.getElementById(ligne+"_"+col)
+		            var laCase2 = document.getElementById(col+"_"+ligne)
+		            var indiceLigne = document.getElementById("indiceL_"+ligne)
+
+		            if(laCase.classList.contains("blackBg")) {
+		              ligneArray.push(true)
+		              cpt1++
+		            } else {
+		              ligneArray.push(false)
+		              if(cpt1 > 0) {
+		                indiceLigne.innerHTML = indiceLigne.innerHTML + cpt1 + " | "
+		                cpt1 = 0
+		              }
+		            }
+
+		            if(laCase2.classList.contains("blackBg")) {
+		              colArray.push(true)
+		            } else {
+		              colArray.push(false)
+		            }
+		          }  
+
+                  this.tableauLignesDeCases.push(ligneArray)
+		          this.tableauColDeCases.push(colArray)
+		        } 
+
+		        // Calcul des nb sur col
+		        for(var col=1 ; col<26; col++) {
+		          var cpt1 = 0
+		          for(var ligne=1 ; ligne<26; ligne++) {
+		            var laCase = document.getElementById(ligne+"_"+col)
+		            var indiceCol = document.getElementById("indiceT_"+col)
+		            if(laCase.classList.contains("blackBg")) {
+		              cpt1++
+		            } else {
+		              if(cpt1 > 0) {
+		                indiceCol.innerHTML = indiceCol.innerHTML + cpt1 + "<br/><br/>"
+		                cpt1 = 0
+		              }
+		            }
+		          }  
+		        } 
+
+		        // Masquage indices
+		        for (i = 0; i < this.casesIndicesT.length; i++) {
+		          this.casesIndicesT[i].dataset.html2canvasIgnore = "true"
+		        }
+		        for (i = 0; i < this.casesIndicesL.length; i++) {
+		          this.casesIndicesL[i].dataset.html2canvasIgnore = "true"
+		        }
+
+		        // Création de l'image mignature de solution
+		        html2canvas(document.querySelector("#container")).then(canvas => {
+		            canvas.style.width = "680px"
+		            canvas.style.height = "500px"
+		            document.body.appendChild(canvas)
+		            // Export
+		            var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+		            this.downloadGridImage(image, 'Grille-Solution.png');
+		        });
+
+		        // Nettoyage image
+		        this.resetGrid()
+		        // Affichage indices
+		        for (i = 0; i < this.casesIndicesT.length; i++) {
+		          delete this.casesIndicesT[i].dataset.html2canvasIgnore;
+		        }
+		        for (i = 0; i < this.casesIndicesL.length; i++) {
+		          delete this.casesIndicesL[i].dataset.html2canvasIgnore;
+		        }
+
+		        // Création de l'image
+		        html2canvas(document.querySelector("#container")).then(canvas => {
+		            document.body.appendChild(canvas)
+		            // Export
+		            var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+		            this.downloadGridImage(image, 'Grille.png');
+		        });
+		    },
+
+            downloadGridImage: function(data, filename = 'Grille.png') {
+		        var a = document.createElement('a');
+		        a.href = data;
+		        a.download = filename;
+		        document.body.appendChild(a);
+		        a.click();
+		    },
 
             zoomMinus: function () {
                 this.mouseUp()
