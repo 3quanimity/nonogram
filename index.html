@@ -9,6 +9,72 @@
 	<link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
 </head>
 <body>
-    <h2>Nonogramme</h2>
+    <div id="app">
+        <div id="toolBar">
+		    <button @click="resetGridAndIndicex">Vider la grille</button> 
+		    <button @click="validGrid">Exporter la grille</button>
+		    <button @click="zoomMinus">Zoom -</button>
+		    <button @click="zoomPlus">Zoom +</button>
+		    <input type="file" @change="loadImage"/>
+		</div>
+
+        <canvas width="25" height="25" id="previewCanvas">
+	    	Désolé, votre navigateur ne prend pas en charge html5.
+	  	</canvas>
+    </div>
 </body>
+
+<script type="text/javascript">
+    Vue.createApp({
+        data(){
+            return {
+                zoom: 75,
+                isMouseDown: false,
+            }
+        },
+
+        mounted: function () {
+
+        },
+
+        methods: {
+            // track if user is clicking on canvas
+            mouseDown: function(event) {
+                this.isMouseDown = true
+            },
+
+            mouseUp: function(event) {
+                this.isMouseDown = false
+            },
+
+            resetGridAndIndicex: function () {
+
+            },
+
+            validGrid: function () {
+
+            },
+
+            zoomMinus: function () {
+                this.mouseUp()
+                if ( this.zoom >= 65 ) {
+                    this.zoom -= 5
+                }
+            },
+
+            zoomPlus: function () {
+                this.mouseUp()
+                if ( this.zoom < 100 ) {
+                    this.zoom += 5
+                }
+            },
+
+            loadImage: function (event) {
+
+            },
+
+        }
+
+    }).mount('#app')
+</script>
 </html>
