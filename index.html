@@ -10,6 +10,25 @@
 </head>
 <body>
     <div id="app">
+        <input type="checkbox" id="checkboxColorMode" v-model="colorMode">
+        <label for="checkboxColorMode">Activer le mode coloration</label>
+
+        <div id="container" :style="'zoom:'+zoom+'%'">
+		    <!-- Indices haut -->
+		    <div id="caseIndiceT_First"></div>
+		    <div class="caseIndiceT noselect" v-for="c in 25" :id="'indiceT_'+c"></div>
+
+		    <!-- Grille -->
+		    <div class="ligne" v-for="l in 25">
+		      <span v-for="c in 25">
+		        <!-- Indices gauche -->
+		        <div v-if="c == 1" class="caseIndiceL noselect" :id="'indiceL_'+l"></div>
+		        <!-- Cases de la ligne -->
+		        <div class="case" :id="l+'_'+c" @mouseover="colorize" @mousedown="mouseDown" @mouseup="mouseUp"></div>
+		      </span>
+		    </div>
+		</div>
+
         <div id="toolBar">
 		    <button @click="resetGridAndIndicex">Vider la grille</button> 
 		    <button @click="validGrid">Exporter la grille</button>
@@ -29,16 +48,36 @@
         data(){
             return {
                 zoom: 75,
-                isMouseDown: false,
+                isMouseDown: false, // tracks if user is clicking on canvas
+                colorMode: true, // tracks if user is painting
+                casesColored: [],
+                casesColoredLoaded: [],
+                tableauColDeCases: [],
+        		tableauLignesDeCases: [],
+        		casesIndicesT: [],
+        		casesIndicesL: []
             }
         },
 
         mounted: function () {
-
+            this.casesIndicesT = document.getElementsByClassName("caseIndiceT")
+            this.casesIndicesL = document.getElementsByClassName("caseIndiceL")
         },
 
         methods: {
-            // track if user is clicking on canvas
+            colorize: function (event) {
+		        if(this.isMouseDown) {
+		          targetId = event.currentTarget.id
+		          targetDiv = event.target
+		          if (this.colorMode) {
+		            targetDiv.classList.add("blackBg")
+		            this.casesColored.push(targetDiv)
+		          } else {
+		            targetDiv.classList.remove("blackBg")
+		          }
+		        }
+		    },
+
             mouseDown: function(event) {
                 this.isMouseDown = true
             },
